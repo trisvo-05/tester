@@ -1,4 +1,4 @@
-%%writefile train_cluster.py
+
 import os
 import argparse
 import torch

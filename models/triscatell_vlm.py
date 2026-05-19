@@ -1,4 +1,4 @@
-%%writefile triscatell_vlm.py
+
 import torch
 import torch.nn as nn
 from transformers import Qwen2_5_VLForConditionalGeneration, BitsAndBytesConfig
