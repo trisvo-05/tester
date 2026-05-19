@@ -1,3 +1,4 @@
+%%writefile triscatell_vlm.py
 import torch
 import torch.nn as nn
 from transformers import Qwen2_5_VLForConditionalGeneration, BitsAndBytesConfig
@@ -65,7 +66,6 @@ class TriSliceVLM(nn.Module):
         vis_mask = torch.ones((batch_size, num_vis_tokens), dtype=attention_mask.dtype, device=attention_mask.device)
         full_attention_mask = torch.cat([vis_mask, attention_mask], dim=1)
         
-        # Xử lý nhãn: Bỏ qua tính Loss trên phần hình ảnh bằng giá trị -100
         if labels is not None:
             vis_labels = torch.full((batch_size, num_vis_tokens), -100, dtype=labels.dtype, device=labels.device)
             full_labels = torch.cat([vis_labels, labels], dim=1)

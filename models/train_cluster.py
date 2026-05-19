@@ -1,5 +1,6 @@
+%%writefile train_cluster.py
 import os
-import sys
+import argparse
 import torch
 from torch.utils.data import DataLoader, random_split
 from torchvision import transforms
@@ -7,20 +8,17 @@ from accelerate import Accelerator
 from accelerate.utils import set_seed
 from transformers import get_cosine_schedule_with_warmup
 from transformers import Qwen2_5_VLProcessor
-import wandb
-
-sys.path.append(r"C:\Users\shiro\Downloads\Reseach") 
-sys.path.append(r"C:\Users\shiro\Downloads\Reseach\models")
 
 from dataset import MedSGJointDataset, collate_fn_filter_none
 from triscatell_vlm import TriSliceVLM
 
 def main():
-    accelerator = Accelerator(gradient_accumulation_steps=4, log_with="wandb")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data_dir", type=str, required=True, help="Đường dẫn đến dataset")
+    args = parser.parse_args()
+
+    accelerator = Accelerator(gradient_accumulation_steps=4)
     set_seed(42)
-    
-    if accelerator.is_main_process:
-        accelerator.init_trackers("triscatell-medsg-local-test")
 
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -28,20 +26,21 @@ def main():
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
     
-    root_dir = r"C:\Users\shiro\Downloads\Reseach\datasets\MedSG-Train" 
-    full_dataset = MedSGJointDataset(root_dir=root_dir, num_slices=5, transform=transform)
+    full_dataset = MedSGJointDataset(root_dir=args.data_dir, num_slices=5, transform=transform)
     
+    if len(full_dataset) == 0:
+        raise ValueError(f"Không tìm thấy dữ liệu nào tại {args.data_dir}. Vui lòng kiểm tra lại đường dẫn!")
+        
     train_size = int(0.9 * len(full_dataset))
     val_size = len(full_dataset) - train_size
     train_dataset, val_dataset = random_split(full_dataset, [train_size, val_size])
     train_dataset.dataset = full_dataset 
     
-    train_dataloader = DataLoader(train_dataset, batch_size=2, shuffle=True, collate_fn=collate_fn_filter_none, num_workers=0)
+    train_dataloader = DataLoader(train_dataset, batch_size=2, shuffle=True, collate_fn=collate_fn_filter_none, num_workers=2)
 
     model = TriSliceVLM(use_4bit=True) 
-    
     processor = Qwen2_5_VLProcessor.from_pretrained("Qwen/Qwen2.5-VL-7B-Instruct")
-    processor.tokenizer.add_special_tokens({'additional_special_tokens': ['<tool_call>', '<tool_call>']})
+    processor.tokenizer.add_special_tokens({'additional_special_tokens': ['<|box_start|>', '<|box_end|>']})
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
     scheduler = get_cosine_schedule_with_warmup(optimizer, 30, 1000)
@@ -51,6 +50,9 @@ def main():
     global_step = 0
     
     for epoch in range(1, 4):
+        if accelerator.is_main_process:
+            print(f"\n🚀 BẮT ĐẦU EPOCH {epoch}")
+            
         for batch in train_dataloader:
             if batch is None: continue
             
@@ -83,7 +85,7 @@ def main():
                     accelerator.clip_grad_norm_(model.parameters(), 1.0)
                     global_step += 1
                     if accelerator.is_main_process and global_step % 10 == 0:
-                        print(f"Step {global_step} | CrossEntropy Loss: {loss.item():.4f}")
+                        print(f"Step {global_step} | Loss: {loss.item():.4f}")
                 
                 optimizer.step()
                 scheduler.step()
