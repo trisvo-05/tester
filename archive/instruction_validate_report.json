@@ -1,0 +1,47 @@
+{
+  "train": {
+    "n_checked": 100,
+    "n_valid": 100,
+    "n_invalid": 0,
+    "pass_rate_pct": 100.0,
+    "total_errors": 0,
+    "total_warnings": 0,
+    "token_stats": {
+      "min": 1037,
+      "max": 1055,
+      "avg": 1046.1,
+      "over_8k": 0
+    },
+    "failed_samples": []
+  },
+  "val": {
+    "n_checked": 100,
+    "n_valid": 100,
+    "n_invalid": 0,
+    "pass_rate_pct": 100.0,
+    "total_errors": 0,
+    "total_warnings": 0,
+    "token_stats": {
+      "min": 1038,
+      "max": 1057,
+      "avg": 1046.5,
+      "over_8k": 0
+    },
+    "failed_samples": []
+  },
+  "test": {
+    "n_checked": 100,
+    "n_valid": 100,
+    "n_invalid": 0,
+    "pass_rate_pct": 100.0,
+    "total_errors": 0,
+    "total_warnings": 0,
+    "token_stats": {
+      "min": 1038,
+      "max": 1060,
+      "avg": 1046.9,
+      "over_8k": 0
+    },
+    "failed_samples": []
+  }
+}

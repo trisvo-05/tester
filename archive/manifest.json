@@ -1,0 +1,72 @@
+{
+  "dataset": "MedSG-Bench Kidney Sequential Triplets v3",
+  "version": 3,
+  "note": "Scanned ALL kidney PNG files from Task{N}/Task{N}/ folders",
+  "total_triplets": 27593,
+  "splits": {
+    "train": {
+      "triplets": 21969,
+      "cases": 1216
+    },
+    "val": {
+      "triplets": 3031,
+      "cases": 152
+    },
+    "test": {
+      "triplets": 2593,
+      "cases": 152
+    }
+  },
+  "source": {
+    "total_unique_slices": 16752,
+    "slices_with_bbox": 16752,
+    "unique_volumes": 2292,
+    "bbox_index_size": 26835
+  },
+  "config": {
+    "k_values": [
+      1,
+      2,
+      3
+    ],
+    "iou_threshold": 0.3,
+    "max_slice_gap": 30,
+    "split_ratio": [
+      0.8,
+      0.1,
+      0.1
+    ],
+    "seed": 42,
+    "img_size": 512,
+    "k_semantic": "index_step_in_sorted_stack"
+  },
+  "distributions": {
+    "laterality": {
+      "right": 13645,
+      "left": 13948
+    },
+    "k": {
+      "1": 12163,
+      "2": 8797,
+      "3": 6633
+    },
+    "source_task": {
+      "1": 1539,
+      "2": 1499,
+      "5": 2005,
+      "6": 1447,
+      "7": 21103
+    }
+  },
+  "label_stats": {
+    "presence_zk_minus_yes": 8476,
+    "presence_zk_plus_yes": 8552,
+    "missing_bbox_z": 0,
+    "uncertain_confidence": 6104
+  },
+  "gap_stats": {
+    "min": 1,
+    "max": 30,
+    "avg": 5.5
+  }
+}

@@ -1,0 +1,6 @@
+ckpt,n_samples,n_cases,mean_iou_2d,iou_2d_ci_lo,iou_2d_ci_hi,avg_center_dist_px,laterality_acc,lat_regression_n,mean_viou_3d,mean_hd95_px,std_hd95_px,pres_acc_minus,pres_acc_plus,pres_missing_minus,pres_missing_plus
+ckpt_base,2593,152,0.1373,0.1312,0.1432,36.65,0.9051,30,0.2489,49.1,22.14,N/A (no raw text),N/A (no raw text),2593,2593
+ckpt_lr1e4,2593,152,0.1861,0.179,0.1934,27.4,0.9055,52,0.321,36.68,15.05,N/A (no raw text),N/A (no raw text),2593,2593
+ckpt_lr5e5,2593,152,0.2223,0.2148,0.2299,22.56,0.9005,70,0.3554,30.25,12.63,N/A (no raw text),N/A (no raw text),2593,2593
+ckpt_aug,2593,152,0.2775,0.2699,0.2856,18.26,0.8966,127,0.4147,24.04,10.61,N/A (no raw text),N/A (no raw text),2593,2593
+ckpt_full,2593,152,0.4684,0.4604,0.4764,9.02,0.8974,208,0.6028,12.37,4.66,N/A (no raw text),N/A (no raw text),2593,2593
